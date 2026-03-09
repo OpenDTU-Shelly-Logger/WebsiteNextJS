@@ -1,0 +1,52 @@
+.rotatedContainer {
+    transform: rotate(20deg);
+}
+
+.container {
+    width: 140px;
+    height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+.circle {
+    position: absolute;
+    width: 130px;
+    height: 130px;
+    border-radius: 65px;
+    border: 2px solid white;
+}
+
+.label {
+    position: absolute;
+    font-size: 24px;
+    font-weight: bold;
+    color: white;
+    text-align: center;
+}
+
+.north {
+    top: 10px;
+    left: 50%;
+    transform: translateX(-6px);
+}
+
+.south {
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-6px);
+}
+
+.west {
+    top: 50%;
+    left: 10px;
+    transform: translateY(-14px);
+}
+
+.east {
+    top: 50%;
+    right: 10px;
+    transform: translateY(-14px);
+}

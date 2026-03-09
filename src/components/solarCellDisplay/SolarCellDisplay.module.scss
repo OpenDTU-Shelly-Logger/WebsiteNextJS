@@ -1,0 +1,50 @@
+.wrapper {
+  border-radius: 10px;
+  background-color: #333333;
+  min-height: 120px;
+  min-width: 380px;
+  display: flex;
+  align-items: center;
+  width: fit-content;
+  justify-content: center;
+  flex-direction: column;
+  padding: 10px;
+  border: 2px solid white;
+  margin: 0.7em;
+  font-size: 1.4em;
+
+  th {
+    color: var(--accent1);
+  }
+
+  th,
+  td,
+  th {
+    padding: 5px;
+    text-align: left;
+  }
+
+  table tr:nth-child(even) {
+    background-color: rgb(65, 65, 65);
+  }
+
+  table td:nth-child(2),
+  table th:nth-child(2) {
+    text-align: right;
+    padding-left: 30px;
+    font-weight: bold;
+  }
+
+  table td:nth-child(3),
+  table th:nth-child(3) {
+    text-align: left;
+    padding-left: 10px;
+  }
+}
+.headline {
+  text-align: center;
+  width: 100%;
+  border-bottom: 2px solid white;
+  padding-bottom: 4px;
+  margin-bottom: 10px;
+}
