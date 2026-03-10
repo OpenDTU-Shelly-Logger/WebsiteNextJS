@@ -67,6 +67,8 @@ http {
 
         location / {
             proxy_pass: http://localhost:5454;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
         }
     }
 }
