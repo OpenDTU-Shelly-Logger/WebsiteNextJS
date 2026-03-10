@@ -41,12 +41,14 @@ export default function SolarGraphPage() {
   const monthDates: string[] = Object.keys(allMonthData);
   const [chartAccentColor, setChartAccentColor] = useState("rgb(255,100,0)");
 
-  if (typeof window !== "undefined") {
-    const acc = getComputedStyle(document.documentElement)
-      .getPropertyValue("--accent1")
-      .trim();
-    setChartAccentColor(acc);
-  }
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const acc = getComputedStyle(document.documentElement)
+        .getPropertyValue("--accent1")
+        .trim();
+      setChartAccentColor(acc);
+    }
+  }, []);
 
   const yieldAverage =
     yieldDay.reduce((sum, value) => sum + value, 0) / yieldDay.length;
@@ -74,7 +76,7 @@ export default function SolarGraphPage() {
       const year = item.date.year;
 
       if (yearData[year] == null) yearData[year] = [];
-      else yearData[year].push(item);
+      yearData[year].push(item);
     }
 
     const monthData: Record<string, DailySolarData[]> = {};

@@ -9,7 +9,7 @@ import { useSolar } from "@/contexts/PowerContext";
 export default function OverViewPage() {
   const { historyData, livePowerData, liveSolarData } = useSolar();
   const todayData = historyData[historyData.length - 1];
-  const solarCells = liveSolarData?.inverters[0].DC;
+  const solarCells = liveSolarData?.inverters?.[0]?.DC;
 
   const [screenWidth, setScreenWidth] = useState<number>(0);
 
