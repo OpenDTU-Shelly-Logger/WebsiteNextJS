@@ -5,7 +5,7 @@ import { emitAllData } from "@/services/socketEmitter";
 
 export async function POST(request: NextRequest) {
   try {
-    if (request.headers.get("apikey") !== process.env.SOLAR_API_KEY) {
+    if (request.headers.get("apikey") !== process.env.UPLOAD_API_KEY) {
       return NextResponse.json({ message: "Invalid API key" }, { status: 503 });
     }
 
