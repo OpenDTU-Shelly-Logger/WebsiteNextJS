@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import styles from "./SolarGraphPage.module.scss";
 import { Chart as ChartJS, registerables } from "chart.js";
 import { Chart, Line } from "react-chartjs-2";
-import React from "react";
 import {
   calculateAverageHighestWatt,
   calculateAverageTemperature,
@@ -40,9 +39,14 @@ export default function SolarGraphPage() {
   >({});
   const yearDates: string[] = Object.keys(allYearData);
   const monthDates: string[] = Object.keys(allMonthData);
+  const [chartAccentColor, setChartAccentColor] = useState("rgb(255,100,0)");
 
-  const rootStyles = getComputedStyle(document.documentElement);
-  const chartAccentColor = rootStyles.getPropertyValue("--accent1").trim();
+  if (typeof window !== "undefined") {
+    const acc = getComputedStyle(document.documentElement)
+      .getPropertyValue("--accent1")
+      .trim();
+    setChartAccentColor(acc);
+  }
 
   const yieldAverage =
     yieldDay.reduce((sum, value) => sum + value, 0) / yieldDay.length;
