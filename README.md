@@ -6,7 +6,7 @@ This project is a logger for OpenDTU as well as for the Shelly 3M. It consists o
 1. OpenDTU
 2. Shelly 3M
 3. A python server running at your home
-4. (Optional) A public server for viewing your data inside the App or on the web interface.
+4. A public (or private) server for viewing your data inside the App or on the web interface.
 
 How it works:
 The python script in your local network polls the date of the OpenDTU API as well as the Shelly 3M power meter api.
