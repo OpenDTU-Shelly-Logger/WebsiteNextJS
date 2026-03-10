@@ -1,6 +1,6 @@
 "use client";
 
-import { getAllSolarItems, loadAllData, loadData } from "@/services/dataParser";
+import { loadAllData, loadData } from "@/services/dataParser";
 import { loadPowerData } from "@/services/powerDataParser";
 import { PowerData } from "@/types/Emeter";
 import { SolarData } from "@/types/OpenDTUData";
@@ -13,7 +13,6 @@ import React, {
   ReactNode,
 } from "react";
 import { io } from "socket.io-client";
-
 interface SolarContextType {
   historyData: DailySolarData[];
   liveSolarData: SolarData | null;
@@ -40,27 +39,22 @@ export function SolarProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
-    const socket = io("http://localhost:3005", {
-      path: "/dataSocket",
-      transports: ["websocket"],
+    // 1. Trigger the API route to ensure the server starts
+    fetch("/api/socket");
+
+    // 2. Connect to the same host/port Next.js is running on
+    const socket = io({
+      path: "/api/socket",
     });
 
-    // 1. Listen for Live OpenDTU data
     socket.on("liveSolar", (data) => setLiveData(data));
 
-    // 2. Listen for History updates
     socket.on("historyData", (data) => {
-      let items: DailySolarData[];
-      if (typeof data === "string" && data.includes("|")) {
-        items = getAllSolarItems(data).items;
-      } else {
-        items = typeof data === "string" ? JSON.parse(data).items : data.items;
-      }
-
-      if (items !== undefined) setHistoryData(items);
+      const items =
+        typeof data === "string" ? JSON.parse(data).items : data.items;
+      if (items) setHistoryData(items);
     });
 
-    // 3. Listen for Shelly/Power data
     socket.on("livePower", (data) => {
       setPowerData(typeof data === "string" ? JSON.parse(data) : data);
     });
@@ -68,9 +62,7 @@ export function SolarProvider({ children }: { children: ReactNode }) {
     fetchData();
 
     return () => {
-      socket.off("liveSolar");
-      socket.off("historyData");
-      socket.off("livePower");
+      socket.disconnect();
     };
   }, []);
 
