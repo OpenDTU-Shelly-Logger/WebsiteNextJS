@@ -5,8 +5,10 @@ import SolarSummaryDisplay from "../solarSummaryDisplay/SolarSummaryDisplay";
 import styles from "./HomePage.module.scss";
 import InfoDisplay from "../infoDisplay/InfoDisplay";
 import { useSolar } from "@/contexts/PowerContext";
+import { useTranslations } from "@/locales";
 
 export default function HomePage() {
+  const t = useTranslations();
   const { liveSolarData, historyData } = useSolar();
   const todayData = historyData[historyData.length - 1];
 
@@ -17,15 +19,15 @@ export default function HomePage() {
           <div className={styles.headitems}>
             <DisplayTextItem
               content={liveSolarData?.total.YieldTotal}
-              headline="Gesamtertrag"
+              headline={t.totalYield}
             />
             <DisplayTextItem
               content={liveSolarData?.total.YieldDay}
-              headline="Tagesertrag"
+              headline={t.dailyYield}
             />
             <DisplayTextItem
               content={liveSolarData?.total.Power}
-              headline="Aktuelle Leistung"
+              headline={t.currentPower}
             />
           </div>
         </div>

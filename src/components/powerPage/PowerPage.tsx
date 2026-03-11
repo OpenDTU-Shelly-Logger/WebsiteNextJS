@@ -4,11 +4,13 @@ import DisplayTextItem from "../displayTextItem/DisplayTextItem";
 import styles from "./PowerPage.module.scss";
 import { formatNumber } from "@/helper/formatHelper";
 import { DataTableRow } from "../dataTableRow/DataTableRow";
+import { useTranslations } from "@/locales";
 
 export default function PowerPage() {
+  const t = useTranslations();
   const { livePowerData, liveSolarData } = useSolar();
 
-  if (livePowerData === null) return <div>Got no power Data</div>;
+  if (livePowerData === null) return <div>{t.noData}</div>;
 
   return (
     <div>
@@ -16,7 +18,7 @@ export default function PowerPage() {
         <div className={styles.items}>
           <DisplayTextItem
             text={formatNumber(livePowerData.total_power, 2, "W")}
-            headline="Aktuelle Einspeisung"
+            headline={t.currentFeedIn}
           />
           <DisplayTextItem
             text={formatNumber(
@@ -24,25 +26,25 @@ export default function PowerPage() {
               2,
               "W",
             )}
-            headline="Aktueller Verbrauch"
+            headline={t.currentConsumption}
           />
         </div>
         <div className={styles.phases}>
           {livePowerData.emeters.map((phase, i) => (
             <div key={i} className={styles.phaseItem}>
-              <div className={styles.headline}>{"Phase " + (i + 1)}</div>
+              <div className={styles.headline}>{t.phase + " " + (i + 1)}</div>
               <table>
                 <thead>
                   <tr>
-                    <th>Eigenschaft</th>
-                    <th>Wert</th>
-                    <th>Einheit</th>
+                    <th>{t.property}</th>
+                    <th>{t.value}</th>
+                    <th>{t.unit}</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {DataTableRow("Watt", phase.power, 2, "W")}
-                  {DataTableRow("Strom", phase.current, 2, "A")}
-                  {DataTableRow("Spannung", phase.voltage, 2, "V")}
+                  {DataTableRow(t.power, phase.power, 2, "W")}
+                  {DataTableRow(t.current, phase.current, 2, "A")}
+                  {DataTableRow(t.voltage, phase.voltage, 2, "V")}
                 </tbody>
               </table>
             </div>

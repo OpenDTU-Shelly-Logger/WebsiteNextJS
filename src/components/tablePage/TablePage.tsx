@@ -4,6 +4,7 @@ import styles from "./TablePage.module.scss";
 import { useSolar } from "@/contexts/PowerContext";
 import { dateItemToString } from "@/types/DateItem";
 import { formatNumber } from "../../helper/formatHelper";
+import { useTranslations } from "@/locales";
 
 type SortField =
   | "Date"
@@ -14,12 +15,13 @@ type SortField =
 type SortDirection = "asc" | "desc";
 
 export default function TablePage() {
+  const t = useTranslations();
   const { historyData } = useSolar();
 
   const [sortField, setSortField] = useState<SortField>("Date");
   const [sortDirection, setSortDirection] = useState<SortDirection>("desc");
 
-  if (historyData == null) return <div>Got no Data</div>;
+  if (historyData == null) return <div>{t.noData}</div>;
 
   const handleSort = (field: SortField) => {
     if (field === sortField) {
@@ -68,26 +70,30 @@ export default function TablePage() {
               onClick={() => handleSort("Date")}
               className={styles.sortableHeader}
             >
-              Tag{getSortIndicator("Date")}
+              {t.date}
+              {getSortIndicator("Date")}
             </th>
-            <th>KW (Insgesamt)</th>
+            <th>{t.totalYield} (kWh)</th>
             <th
               onClick={() => handleSort("YieldDay")}
               className={styles.sortableHeader}
             >
-              Watt (Täglich){getSortIndicator("YieldDay")}
+              {t.dailyYieldWh}
+              {getSortIndicator("YieldDay")}
             </th>
             <th
               onClick={() => handleSort("HighestWatt")}
               className={styles.sortableHeader}
             >
-              Watt (Peak){getSortIndicator("HighestWatt")}
+              {t.peakYieldW}
+              {getSortIndicator("HighestWatt")}
             </th>
             <th
               onClick={() => handleSort("Temperature")}
               className={styles.sortableHeader}
             >
-              Temperatur (Peak){getSortIndicator("Temperature")}
+              {t.temperaturePeakC}
+              {getSortIndicator("Temperature")}
             </th>
           </tr>
         </thead>

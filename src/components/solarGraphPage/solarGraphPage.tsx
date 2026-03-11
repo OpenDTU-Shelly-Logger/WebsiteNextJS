@@ -19,11 +19,13 @@ import { DailySolarData } from "@/types/SolarHistory";
 import { useSolar } from "@/contexts/PowerContext";
 import { DateItem, dateItemToString } from "@/types/DateItem";
 import { formatNumber } from "@/helper/formatHelper";
+import { useTranslations } from "@/locales";
 
 let showEntryCount = 31;
 const PRICE_PER_KWH = 0.24;
 
 export default function SolarGraphPage() {
+  const t = useTranslations();
   const { historyData } = useSolar();
 
   const [dates, setDates] = useState<string[]>([]);
@@ -109,7 +111,7 @@ export default function SolarGraphPage() {
     setAllMonthData(monthData);
   }, [historyData]);
 
-  if (historyData == null) return <div>Got no Data</div>;
+  if (historyData == null) return <div>{t.noData}</div>;
 
   const parseGermanDate = (dateItem: DateItem): Date => {
     return new Date(dateItem.year, dateItem.month - 1, dateItem.day);
@@ -136,7 +138,7 @@ export default function SolarGraphPage() {
     labels: dates,
     datasets: [
       {
-        label: "Yield Total",
+        label: t.totalYieldKwh,
         data: yieldTotal,
         fill: false,
         borderColor: chartAccentColor,
@@ -150,14 +152,14 @@ export default function SolarGraphPage() {
     labels: dates,
     datasets: [
       {
-        label: "Tagesertrag (Wh)",
+        label: t.dailyYieldWh,
         data: yieldDay,
         type: "bar" as const,
         backgroundColor: "rgb(255, 99, 132)",
         fill: false,
       },
       {
-        label: "Durchschnitt (Wh)",
+        label: t.averageWh,
         data: Array(dates.length).fill(yieldAverage),
         borderColor: "rgb(0, 255, 50)",
         type: "line" as const,
@@ -167,7 +169,7 @@ export default function SolarGraphPage() {
       },
       {
         type: "line" as const,
-        label: "Wöchentlicher Durchschnitt (Wh)",
+        label: t.weeklyAverageWh,
         data: calculateWeeklyAverages(yieldDay, dates),
         borderColor: "rgb(255,165,0)",
         borderWidth: 3,
@@ -176,7 +178,7 @@ export default function SolarGraphPage() {
         fill: false,
       },
       {
-        label: "Trendlinie",
+        label: t.trendLine,
         type: "line" as const,
         data: calculateTrendLine(yieldDay),
         borderColor: "rgb(75, 192, 192)",
@@ -187,7 +189,7 @@ export default function SolarGraphPage() {
         hidden: true,
       },
       {
-        label: `SMA (31 Tage)`,
+        label: t.sma31Days,
         type: "line" as const,
         data: calculateFullMovingAverage(yieldDay, 31),
         borderColor: "rgb(195, 0, 255)",
@@ -202,14 +204,14 @@ export default function SolarGraphPage() {
     labels: dates,
     datasets: [
       {
-        label: "Ertrag Peak",
+        label: t.yieldPeak,
         data: highestWatt,
         backgroundColor: "rgb(255,100,0)",
         borderColor: "rgb(255,100,0)",
         type: "bar" as const,
       },
       {
-        label: "Trendlinie",
+        label: t.trendLine,
         type: "line" as const,
         data: calculateTrendLine(highestWatt),
         borderColor: "rgb(75, 192, 192)",
@@ -219,7 +221,7 @@ export default function SolarGraphPage() {
         fill: false,
       },
       {
-        label: `SMA (31 Tage)`,
+        label: t.sma31Days,
         type: "line" as const,
         data: calculateFullMovingAverage(highestWatt, 31),
         borderColor: "rgb(0,255,0)",
@@ -228,7 +230,7 @@ export default function SolarGraphPage() {
         fill: false,
       },
       {
-        label: "Wöchentlicher Durchschnitt (Wh)",
+        label: t.weeklyAverageWh,
         type: "line" as const,
         data: calculateWeeklyAverages(highestWatt, dates),
         borderColor: "rgb(255, 0, 212)",
@@ -244,14 +246,14 @@ export default function SolarGraphPage() {
     labels: dates,
     datasets: [
       {
-        label: "Temperatur Peak",
+        label: t.temperaturePeakC,
         data: temperature,
         backgroundColor: "rgb(0,255,100)",
         borderColor: "rgb(0,255,100)",
         type: "bar" as const,
       },
       {
-        label: "Trendlinie",
+        label: t.trendLine,
         type: "line" as const,
         data: calculateTrendLine(temperature),
         borderColor: "rgb(75, 192, 192)",
@@ -262,7 +264,7 @@ export default function SolarGraphPage() {
         hidden: true,
       },
       {
-        label: "Durchschnitt (Wh)",
+        label: t.averageWh,
         data: Array(dates.length).fill(temperature),
         borderColor: "rgb(0, 255, 50)",
         type: "line" as const,
@@ -271,7 +273,7 @@ export default function SolarGraphPage() {
         fill: false,
       },
       {
-        label: `SMA (31 Tage)`,
+        label: t.sma31Days,
         type: "line" as const,
         data: calculateFullMovingAverage(temperature, 31),
         borderColor: "rgb(195, 0, 255)",
@@ -288,7 +290,7 @@ export default function SolarGraphPage() {
     plugins: {
       title: {
         display: true,
-        text: "Jährliche Daten",
+        text: t.annualData,
       },
       tooltip: {
         mode: "index" as const,
@@ -420,7 +422,7 @@ export default function SolarGraphPage() {
     labels: yearDates,
     datasets: [
       {
-        label: "Durchschnitt täglicher Ertrag (Watt)",
+        label: t.avgDailyYieldWatt,
         data: yearDates.map((date) =>
           calculateAverageYieldDay(allYearData[date]),
         ),
@@ -428,7 +430,7 @@ export default function SolarGraphPage() {
         type: "bar" as const,
       },
       {
-        label: "Höchster Ertrag (Watt)",
+        label: t.highestYieldWatt,
         data: yearDates.map((date) =>
           calculateHighestYieldDay(allYearData[date]),
         ),
@@ -436,7 +438,7 @@ export default function SolarGraphPage() {
         type: "bar" as const,
       },
       {
-        label: "Durchschnitt Temperatur (°C)",
+        label: t.avgTemperatureC,
         data: yearDates.map((date) =>
           calculateAverageTemperature(allYearData[date]),
         ),
@@ -444,13 +446,13 @@ export default function SolarGraphPage() {
         type: "bar" as const,
       },
       {
-        label: "Gesamtertrag (KWh)",
+        label: t.totalYieldKwh,
         data: yearDates.map((date) => calculateTotalYield(allYearData[date])),
         backgroundColor: "rgb(0, 183, 255)",
         type: "bar" as const,
       },
       {
-        label: "Durchschnitt Peak (Watt)",
+        label: t.avgPeakWatt,
         data: yearDates.map((date) =>
           calculateAverageHighestWatt(allYearData[date]),
         ),
@@ -458,7 +460,7 @@ export default function SolarGraphPage() {
         type: "bar" as const,
       },
       {
-        label: "Höchster Peak (Watt)",
+        label: t.highestPeakWatt,
         data: yearDates.map((date) =>
           calculateHighestPeakWatt(allYearData[date]),
         ),
@@ -469,18 +471,18 @@ export default function SolarGraphPage() {
   };
 
   const monthNames = [
-    "Januar",
-    "Februar",
-    "März",
-    "April",
-    "Mai",
-    "Juni",
-    "Juli",
-    "August",
-    "September",
-    "Oktober",
-    "November",
-    "Dezember",
+    t.january,
+    t.february,
+    t.march,
+    t.april,
+    t.may,
+    t.june,
+    t.july,
+    t.august,
+    t.september,
+    t.october,
+    t.november,
+    t.december,
   ];
 
   const monthlyAverageYieldData = {
@@ -566,7 +568,7 @@ export default function SolarGraphPage() {
         stacked: true,
         title: {
           display: true,
-          text: "Energie in Wh",
+          text: t.energyInWh,
         },
       },
     },
@@ -577,21 +579,21 @@ export default function SolarGraphPage() {
     datasets: [
       {
         type: "bar" as const,
-        label: "Eigenverbrauch",
+        label: t.selfConsumptionLabel,
         data: solarData.map((item) => item.selfUsedWH ?? 0),
         backgroundColor: "rgba(0, 200, 100, 0.8)",
         stack: "Energie",
       },
       {
         type: "bar" as const,
-        label: "Einspeisung (Solar exportiert)",
+        label: t.gridExportLabel,
         data: solarData.map((item) => item.exportedWH ?? 0),
         backgroundColor: "rgba(0, 150, 255, 0.8)",
         stack: "Energie",
       },
       {
         type: "bar" as const,
-        label: "Netzbezug (vom Netz)",
+        label: t.gridImportLabel,
         data: solarData.map((item) => {
           const imported = (item.consumedWH ?? 0) - (item.selfUsedWH ?? 0);
           return imported > 0 ? imported : 0;
@@ -601,7 +603,7 @@ export default function SolarGraphPage() {
       },
       {
         type: "line" as const,
-        label: "Solarertrag (gesamt)",
+        label: t.solarYieldTotalLabel,
         data: solarData.map((item) => item.yieldDay ?? 0),
         borderColor: "gold",
         borderWidth: 2,
@@ -624,50 +626,50 @@ export default function SolarGraphPage() {
   return (
     <div className={styles.solargraphpage}>
       <div className={styles.selectEntryCountWrapper}>
-        <div className={styles.entryCountHeadline}>Zeige letzte:</div>
+        <div className={styles.entryCountHeadline}>{t.showLast}</div>
         <div className={styles.entryCountButtons}>
           <div
             className={styles.showEntryCountButton}
             onClick={() => showEntryCountInputChanged(7)}
           >
-            Woche
+            {t.week}
           </div>
           <div
             className={styles.showEntryCountButton}
             onClick={() => showEntryCountInputChanged(31)}
           >
-            Monat
+            {t.month}
           </div>
           <div
             className={styles.showEntryCountButton}
             onClick={() => showEntryCountInputChanged(93)}
           >
-            3 Monate
+            {t.threeMonths}
           </div>
           <div
             className={styles.showEntryCountButton}
             onClick={() => showEntryCountInputChanged(186)}
           >
-            6 Monate
+            {t.sixMonths}
           </div>
           <div
             className={styles.showEntryCountButton}
             onClick={() => showEntryCountInputChanged(365)}
           >
-            Jahr
+            {t.year}
           </div>
           <div
             className={styles.showEntryCountButton}
             onClick={() => showEntryCountInputChanged(historyData.length)}
           >
-            Alle
+            {t.all}
           </div>
         </div>
       </div>
       <div className={styles.chartswrapper}>
         <div className={styles.charts}>
           <div className={styles.chartwrapper}>
-            <h2>Gesamtertrag (KWh)</h2>
+            <h2>{t.totalYieldKwh}</h2>
             <Line
               className={styles.chartStyle}
               data={lineChartData}
@@ -676,7 +678,7 @@ export default function SolarGraphPage() {
           </div>
 
           <div className={styles.chartwrapper}>
-            <h2>Hausverbrauch</h2>
+            <h2>{t.houseConsumption}</h2>
             <Chart
               options={homePowerUsageChartOptions}
               type={"bar"}
@@ -687,7 +689,7 @@ export default function SolarGraphPage() {
           {yearDates.length > 1 && (
             <>
               <div className={styles.chartwrapper}>
-                <h2>Vergleich Jährlicher Ertrag (KWh)</h2>
+                <h2>{t.yearlyComparisonKwh}</h2>
                 <Chart
                   type={"line"}
                   className={styles.chartStyle}
@@ -696,7 +698,7 @@ export default function SolarGraphPage() {
                 />
               </div>
               <div className={styles.chartwrapper}>
-                <h2>Jährlich Vergleich letzte 30 Tage (KWh)</h2>
+                <h2>{t.yearlyComparisonLast30Days}</h2>
                 <Chart
                   type={"line"}
                   className={styles.chartStyle}
@@ -707,7 +709,7 @@ export default function SolarGraphPage() {
             </>
           )}
           <div className={styles.chartwrapper}>
-            <h2>Tagesertrag (Wh)</h2>
+            <h2>{t.dailyYieldWh}</h2>
             <Chart
               type={"bar"}
               className={styles.chartStyle}
@@ -717,7 +719,7 @@ export default function SolarGraphPage() {
           </div>
 
           <div className={styles.chartwrapper}>
-            <h2>Ertrag Peak (W)</h2>
+            <h2>{t.peakYieldW}</h2>
             <Chart
               type={"bar"}
               className={styles.chartStyle}
@@ -727,7 +729,7 @@ export default function SolarGraphPage() {
           </div>
 
           <div className={styles.chartwrapper}>
-            <h2>Durchschnitt täglicher Ertrag pro Monat (Watt)</h2>
+            <h2>{t.avgDailyYieldPerMonth}</h2>
             <Chart
               type={"bar"}
               className={styles.chartStyle}
@@ -736,7 +738,7 @@ export default function SolarGraphPage() {
             />
           </div>
           <div className={styles.chartwrapper}>
-            <h2>Gesamter Monatlicher Ertrag (KWh)</h2>
+            <h2>{t.totalMonthlyYield}</h2>
             <Chart
               type={"bar"}
               className={styles.chartStyle}
@@ -745,7 +747,7 @@ export default function SolarGraphPage() {
             />
           </div>
           <div className={styles.chartwrapper}>
-            <h2>Monatlicher höchster Ertrag (Wh)</h2>
+            <h2>{t.monthlyHighestYield}</h2>
             <Chart
               type={"bar"}
               className={styles.chartStyle}
@@ -754,7 +756,7 @@ export default function SolarGraphPage() {
             />
           </div>
           <div className={styles.chartwrapper}>
-            <h2>Monatlicher höchster Peak (W)</h2>
+            <h2>{t.monthlyHighestPeak}</h2>
             <Chart
               type={"bar"}
               className={styles.chartStyle}
@@ -763,7 +765,7 @@ export default function SolarGraphPage() {
             />
           </div>
           <div className={styles.chartwrapper}>
-            <h2>Temperatur Peak (C°)</h2>
+            <h2>{t.temperaturePeakC}</h2>
             <Chart
               type={"bar"}
               className={styles.chartStyle}
@@ -773,7 +775,7 @@ export default function SolarGraphPage() {
           </div>
 
           <div className={styles.chartwrapper}>
-            <h2>Jährliche Statistiken</h2>
+            <h2>{t.yearlyStatistics}</h2>
             <Chart
               type={"bar"}
               className={styles.chartStyle}

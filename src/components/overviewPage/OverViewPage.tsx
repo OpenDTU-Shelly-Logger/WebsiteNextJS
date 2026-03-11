@@ -6,12 +6,14 @@ import { useSolar } from "@/contexts/PowerContext";
 import IndividualCellDisplay from "../individualCellDisplay/IndividualCellDisplay";
 import OverviewItem from "../overviewItem/OverviewItem";
 import SectionHeadline from "../sectionHeadline/SectionHeadline";
+import { useTranslations } from "@/locales";
 
 export default function OverViewPage() {
+  const t = useTranslations();
   const { historyData, livePowerData, liveSolarData } = useSolar();
   const todayData = historyData[historyData.length - 1];
 
-  if (!todayData || !liveSolarData || !livePowerData) return "No Data";
+  if (!todayData || !liveSolarData || !livePowerData) return t.noData;
 
   const calculateTotalExported = () => {
     let total = 0;
@@ -44,88 +46,88 @@ export default function OverViewPage() {
       <div className={styles.overviewPage}>
         <PowerFlowGraph powerData={livePowerData} solarData={liveSolarData} />
 
-        <SectionHeadline text="Heute" />
+        <SectionHeadline text={t.today} />
 
         <div className={styles.overviewItems}>
           <OverviewItem
             digits={0}
-            title="Solar Peak"
+            title={`${t.solar} ${t.peak}`}
             value={todayData.highestWatt}
             unit="W"
           />
 
           <OverviewItem
             digits={0}
-            title="Tagesertrag"
+            title={t.dailyYield}
             value={liveSolarData?.total.YieldDay.v}
             unit="Wh"
           />
 
           <OverviewItem
             digits={0}
-            title="Hausverbrauch"
+            title={t.houseConsumption}
             value={todayData.consumedWH ?? 0}
             unit="Wh"
           />
 
           <OverviewItem
             digits={0}
-            title="Netzeinspeisung"
+            title={t.gridFeedIn}
             value={todayData.exportedWH ?? 0}
             unit="Wh"
           />
 
           <OverviewItem
             digits={0}
-            title="Umgesetzter Solarstrom"
+            title={t.usedSolarPower}
             value={todayData.selfUsedWH ?? 0}
             unit="Wh"
           />
 
           <OverviewItem
             digits={1}
-            title="Eigenverbrauchsquote"
+            title={t.selfConsumptionRate}
             value={(todayData.selfConsumptionRatio ?? 0) * 100}
             unit="%"
           />
 
           <OverviewItem
             digits={1}
-            title="Autarkiegrad"
+            title={t.autarkyRate}
             value={(todayData.autarkyRatio ?? 0) * 100}
             unit="%"
           />
-          <SectionHeadline text="Gesamt" />
+          <SectionHeadline text={t.allTime} />
 
           <OverviewItem
             digits={0}
-            title="Gesamtertrag"
+            title={t.totalYield}
             value={liveSolarData?.total.YieldTotal.v}
             unit="kWh"
           />
 
           <OverviewItem
             digits={2}
-            title="Gesamt Stromverbrauch"
+            title={t.totalPowerConsumption}
             value={calculateTotalConsumed() / 1000}
             unit="kWh"
           />
 
           <OverviewItem
             digits={2}
-            title="Gesamt Solar verwendet"
+            title={t.totalSolarUsed}
             value={calculateTotalSolarUsed() / 1000}
             unit="kWh"
           />
 
           <OverviewItem
             digits={2}
-            title="Gesamt ins Netz"
+            title={t.totalGridFeedIn}
             value={calculateTotalExported() / 1000}
             unit="kWh"
           />
         </div>
-        <SectionHeadline text="Solarzellen Ertrag" />
+        <SectionHeadline text={t.cellYield} />
 
         <div className={styles.centered}>
           <IndividualCellDisplay />
