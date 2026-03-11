@@ -2,6 +2,8 @@
 import { useSolar } from "@/contexts/PowerContext";
 import DisplayTextItem from "../displayTextItem/DisplayTextItem";
 import styles from "./PowerPage.module.scss";
+import { formatNumber } from "@/helper/formatHelper";
+import { DataTableRow } from "../dataTableRow/DataTableRow";
 
 export default function PowerPage() {
   const { livePowerData, liveSolarData } = useSolar();
@@ -13,15 +15,15 @@ export default function PowerPage() {
       <div className={styles.powerPage}>
         <div className={styles.items}>
           <DisplayTextItem
-            text={livePowerData.total_power.toString() + "W"}
+            text={formatNumber(livePowerData.total_power, 2, "W")}
             headline="Aktuelle Einspeisung"
           />
           <DisplayTextItem
-            text={
-              (
-                livePowerData.total_power + (liveSolarData?.total.Power.v ?? 0)
-              ).toFixed(2) + "W"
-            }
+            text={formatNumber(
+              livePowerData.total_power + (liveSolarData?.total.Power.v ?? 0),
+              2,
+              "W",
+            )}
             headline="Aktueller Verbrauch"
           />
         </div>
@@ -38,22 +40,9 @@ export default function PowerPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
-                    <td>Watt</td>
-                    <td>{phase.power}</td>
-                    <td>W</td>
-                  </tr>
-                  <tr>
-                    <td>Strom</td>
-                    <td>{phase.current}</td>
-                    <td>A</td>
-                  </tr>
-
-                  <tr>
-                    <td>Spannung</td>
-                    <td>{phase.voltage}</td>
-                    <td>V</td>
-                  </tr>
+                  {DataTableRow("Watt", phase.power, 2, "W")}
+                  {DataTableRow("Strom", phase.current, 2, "A")}
+                  {DataTableRow("Spannung", phase.voltage, 2, "V")}
                 </tbody>
               </table>
             </div>

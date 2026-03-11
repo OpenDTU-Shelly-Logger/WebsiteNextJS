@@ -1,5 +1,6 @@
 import { DCData } from "@/types/OpenDTUData";
 import styles from "./SolarCellDisplay.module.scss";
+import { DataTableRow } from "../dataTableRow/DataTableRow";
 
 export default function SolarCellDisplay(data: DCData) {
   if (data == null) return <div>Got no Data</div>;
@@ -16,36 +17,22 @@ export default function SolarCellDisplay(data: DCData) {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Leistung</td>
-            <td>{data.Power.v.toFixed(2)}</td>
-            <td>{data.Power.u}</td>
-          </tr>
-          <tr>
-            <td>Spannung</td>
-            <td>{data.Voltage.v.toFixed(2)}</td>
-            <td>{data.Voltage.u}</td>
-          </tr>
-          <tr>
-            <td>Strom</td>
-            <td>{data.Current.v.toFixed(2)}</td>
-            <td>{data.Current.u}</td>
-          </tr>
-          <tr>
-            <td>Tagesertrag</td>
-            <td>{data.YieldDay.v.toFixed(2)}</td>
-            <td>{data.YieldDay.u}</td>
-          </tr>
-          <tr>
-            <td>Gesamtertrag</td>
-            <td>{data.YieldTotal.v.toFixed(2)}</td>
-            <td>{data.YieldTotal.u}</td>
-          </tr>
-          <tr>
-            <td>Bestrahlung</td>
-            <td>{data.Irradiation?.v.toFixed(2)}</td>
-            <td>{data.Irradiation?.u}</td>
-          </tr>
+          {DataTableRow("Leistung", data.Power.v, 2, data.Power.u)}
+          {DataTableRow("Spannung", data.Voltage.v, 2, data.Voltage.u)}
+          {DataTableRow("Strom", data.Current.v, 2, data.Current.u)}
+          {DataTableRow("Tagesertrag", data.YieldDay.v, 2, data.YieldDay.u)}
+          {DataTableRow(
+            "Gesamtertrag",
+            data.YieldTotal.v,
+            2,
+            data.YieldTotal.u,
+          )}
+          {DataTableRow(
+            "Bestrahlung",
+            data.Irradiation?.v,
+            2,
+            data.Irradiation?.u,
+          )}
         </tbody>
       </table>
     </div>

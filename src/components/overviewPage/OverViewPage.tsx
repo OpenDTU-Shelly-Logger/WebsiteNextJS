@@ -1,52 +1,17 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import styles from "./OverViewPage.module.scss";
-import Compass from "../compass/Compass";
 import PowerFlowGraph from "../powerFlowGraph/PowerFlowGraph";
 import { useSolar } from "@/contexts/PowerContext";
+import IndividualCellDisplay from "../individualCellDisplay/IndividualCellDisplay";
+import OverviewItem from "../overviewItem/OverviewItem";
+import SectionHeadline from "../sectionHeadline/SectionHeadline";
 
 export default function OverViewPage() {
   const { historyData, livePowerData, liveSolarData } = useSolar();
   const todayData = historyData[historyData.length - 1];
-  const solarCells = liveSolarData?.inverters?.[0]?.DC;
-
-  const [screenWidth, setScreenWidth] = useState<number>(0);
-
-  useEffect(() => {
-    const handleResize = () => setScreenWidth(window.innerWidth);
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   if (!todayData || !liveSolarData || !livePowerData) return "No Data";
-
-  const makeCell = (width: number, index: number) => {
-    if (solarCells === undefined) return;
-
-    if (screenWidth <= 500) width = 140;
-
-    const dynamicStyle = {
-      width: width - 20,
-      height: width,
-    };
-
-    return (
-      <div className={styles.cell} style={dynamicStyle}>
-        <div
-          className={styles.irradiationBox}
-          style={{ height: solarCells[index].Irradiation?.v + "%" }}
-        />
-        <div className={styles.cellLabel}>{solarCells[index].name.u}</div>
-        <div
-          style={{ zIndex: 100 }}
-        >{`${solarCells[index].Power.v.toFixed(1)}W`}</div>
-      </div>
-    );
-  };
 
   const calculateTotalExported = () => {
     let total = 0;
@@ -79,75 +44,91 @@ export default function OverViewPage() {
       <div className={styles.overviewPage}>
         <PowerFlowGraph powerData={livePowerData} solarData={liveSolarData} />
 
-        <div style={{ fontSize: "24px", marginTop: 80 }}>Allgemeine Daten</div>
+        <SectionHeadline text="Heute" />
 
         <div className={styles.overviewItems}>
-          <div className={styles.overviewItem}>
-            <div>Gesamtertrag</div>
-            <div>{liveSolarData?.total.YieldTotal.v.toFixed(0)} KWh</div>
-          </div>
-          <div className={styles.overviewItem}>
-            <div>Peak</div>
-            <div>{todayData.highestWatt} W</div>
-          </div>
-          <div className={styles.overviewItem}>
-            <div>Tagesertrag</div>
-            <div>{liveSolarData?.total.YieldDay.v.toFixed(0)} Wh</div>
-          </div>
+          <OverviewItem
+            digits={0}
+            title="Solar Peak"
+            value={todayData.highestWatt}
+            unit="W"
+          />
 
-          <div className={styles.overviewItem} style={{ marginTop: "20px" }}>
-            <div>Hausverbrauch</div>
-            <div>{(todayData.consumedWH ?? 0).toFixed(0)} Wh</div>
-          </div>
-          <div className={styles.overviewItem}>
-            <div>Netzeinspeisung</div>
-            <div>{(todayData.exportedWH ?? 0).toFixed(0)} Wh</div>
-          </div>
-          <div className={styles.overviewItem}>
-            <div>Umgesetzter Solarstrom</div>
-            <div>{(todayData.selfUsedWH ?? 0).toFixed(0)} Wh</div>
-          </div>
-          <div className={styles.overviewItem}>
-            <div>Eigenverbrauchsquote</div>
-            <div>
-              {((todayData.selfConsumptionRatio ?? 0) * 100).toFixed(1)}%
-            </div>
-          </div>
-          <div className={styles.overviewItem}>
-            <div>Autarkiegrad</div>
-            <div>{((todayData.autarkyRatio ?? 0) * 100).toFixed(1)}%</div>
-          </div>
+          <OverviewItem
+            digits={0}
+            title="Tagesertrag"
+            value={liveSolarData?.total.YieldDay.v}
+            unit="Wh"
+          />
 
-          <div className={styles.overviewItem} style={{ marginTop: "20px" }}>
-            <div>Gesamt Stromverbrauch</div>
-            <div>{(calculateTotalConsumed() / 1000).toFixed(2)} kWh</div>
-          </div>
+          <OverviewItem
+            digits={0}
+            title="Hausverbrauch"
+            value={todayData.consumedWH ?? 0}
+            unit="Wh"
+          />
 
-          <div className={styles.overviewItem}>
-            <div>Gesamt Solar verwendet</div>
-            <div>{(calculateTotalSolarUsed() / 1000).toFixed(2)} kWh</div>
-          </div>
-          <div className={styles.overviewItem}>
-            <div>Gesamt ins Netz</div>
-            <div>{(calculateTotalExported() / 1000).toFixed(2)} kWh</div>
-          </div>
+          <OverviewItem
+            digits={0}
+            title="Netzeinspeisung"
+            value={todayData.exportedWH ?? 0}
+            unit="Wh"
+          />
+
+          <OverviewItem
+            digits={0}
+            title="Umgesetzter Solarstrom"
+            value={todayData.selfUsedWH ?? 0}
+            unit="Wh"
+          />
+
+          <OverviewItem
+            digits={1}
+            title="Eigenverbrauchsquote"
+            value={(todayData.selfConsumptionRatio ?? 0) * 100}
+            unit="%"
+          />
+
+          <OverviewItem
+            digits={1}
+            title="Autarkiegrad"
+            value={(todayData.autarkyRatio ?? 0) * 100}
+            unit="%"
+          />
+          <SectionHeadline text="Gesamt" />
+
+          <OverviewItem
+            digits={0}
+            title="Gesamtertrag"
+            value={liveSolarData?.total.YieldTotal.v}
+            unit="kWh"
+          />
+
+          <OverviewItem
+            digits={2}
+            title="Gesamt Stromverbrauch"
+            value={calculateTotalConsumed() / 1000}
+            unit="kWh"
+          />
+
+          <OverviewItem
+            digits={2}
+            title="Gesamt Solar verwendet"
+            value={calculateTotalSolarUsed() / 1000}
+            unit="kWh"
+          />
+
+          <OverviewItem
+            digits={2}
+            title="Gesamt ins Netz"
+            value={calculateTotalExported() / 1000}
+            unit="kWh"
+          />
         </div>
+        <SectionHeadline text="Solarzellen Ertrag" />
 
-        <div style={{ fontSize: "24px", marginTop: 60 }}>
-          Solarzellen Ertrag
-        </div>
         <div className={styles.centered}>
-          <div className={styles.column}>
-            <div className={styles.rowBetween}>
-              {makeCell(180, 3)}
-              <Compass />
-              {makeCell(160, 2)}
-            </div>
-            <div className={styles.rowCenter}>
-              {makeCell(170, 0)}
-              {makeCell(170, 1)}
-            </div>
-          </div>
+          <IndividualCellDisplay />
         </div>
       </div>
     </div>

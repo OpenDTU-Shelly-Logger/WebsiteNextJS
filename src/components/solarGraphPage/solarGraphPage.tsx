@@ -18,6 +18,7 @@ import {
 import { DailySolarData } from "@/types/SolarHistory";
 import { useSolar } from "@/contexts/PowerContext";
 import { DateItem, dateItemToString } from "@/types/DateItem";
+import { formatNumber } from "@/helper/formatHelper";
 
 let showEntryCount = 31;
 const PRICE_PER_KWH = 0.24;
@@ -40,6 +41,7 @@ export default function SolarGraphPage() {
   const yearDates: string[] = Object.keys(allYearData);
   const monthDates: string[] = Object.keys(allMonthData);
   const [chartAccentColor, setChartAccentColor] = useState("rgb(255,100,0)");
+  const [locale, setLocale] = useState("en-US");
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -47,6 +49,11 @@ export default function SolarGraphPage() {
         .getPropertyValue("--accent1")
         .trim();
       setChartAccentColor(acc);
+
+      const localLocale =
+        navigator.languages?.[0] || navigator.language || "en-US";
+      ChartJS.defaults.locale = localLocale;
+      setLocale(localLocale);
     }
   }, []);
 
@@ -276,6 +283,7 @@ export default function SolarGraphPage() {
   };
 
   const yearOptions = {
+    locale: locale,
     responsive: true,
     plugins: {
       title: {
@@ -526,6 +534,7 @@ export default function SolarGraphPage() {
   };
 
   const homePowerUsageChartOptions = {
+    locale: locale,
     responsive: true,
     plugins: {
       legend: {
@@ -540,7 +549,11 @@ export default function SolarGraphPage() {
             const euroValue = (whValue / 1000) * PRICE_PER_KWH;
 
             const label = context.dataset.label || "";
-            return `${label}: ${whValue.toLocaleString()} Wh (${euroValue.toFixed(2)} €)`;
+            return `${label}: ${formatNumber(whValue, 0, "Wh")} (${formatNumber(
+              euroValue,
+              2,
+              "€",
+            )})`;
           },
         },
       },
@@ -655,7 +668,11 @@ export default function SolarGraphPage() {
         <div className={styles.charts}>
           <div className={styles.chartwrapper}>
             <h2>Gesamtertrag (KWh)</h2>
-            <Line className={styles.chartStyle} data={lineChartData} />
+            <Line
+              className={styles.chartStyle}
+              data={lineChartData}
+              options={{ locale: locale }}
+            />
           </div>
 
           <div className={styles.chartwrapper}>
@@ -667,28 +684,35 @@ export default function SolarGraphPage() {
               data={homePowerUsageChartData}
             />
           </div>
-          <div className={styles.chartwrapper}>
-            <h2>Vergleich Jährlicher Ertrag (KWh)</h2>
-            <Chart
-              type={"line"}
-              className={styles.chartStyle}
-              data={yearlyData}
-            />
-          </div>
-          <div className={styles.chartwrapper}>
-            <h2>Jährlich Vergleich letzte 30 Tage (KWh)</h2>
-            <Chart
-              type={"line"}
-              className={styles.chartStyle}
-              data={smallRangeYearYield}
-            />
-          </div>
+          {yearDates.length > 1 && (
+            <>
+              <div className={styles.chartwrapper}>
+                <h2>Vergleich Jährlicher Ertrag (KWh)</h2>
+                <Chart
+                  type={"line"}
+                  className={styles.chartStyle}
+                  data={yearlyData}
+                  options={{ locale: locale }}
+                />
+              </div>
+              <div className={styles.chartwrapper}>
+                <h2>Jährlich Vergleich letzte 30 Tage (KWh)</h2>
+                <Chart
+                  type={"line"}
+                  className={styles.chartStyle}
+                  data={smallRangeYearYield}
+                  options={{ locale: locale }}
+                />
+              </div>
+            </>
+          )}
           <div className={styles.chartwrapper}>
             <h2>Tagesertrag (Wh)</h2>
             <Chart
               type={"bar"}
               className={styles.chartStyle}
               data={dailyYieldData}
+              options={{ locale: locale }}
             />
           </div>
 
@@ -698,6 +722,7 @@ export default function SolarGraphPage() {
               type={"bar"}
               className={styles.chartStyle}
               data={lineYieldDayData}
+              options={{ locale: locale }}
             />
           </div>
 
@@ -707,6 +732,7 @@ export default function SolarGraphPage() {
               type={"bar"}
               className={styles.chartStyle}
               data={monthlyAverageYieldData}
+              options={{ locale: locale }}
             />
           </div>
           <div className={styles.chartwrapper}>
@@ -715,6 +741,7 @@ export default function SolarGraphPage() {
               type={"bar"}
               className={styles.chartStyle}
               data={monthlyTotalYieldData}
+              options={{ locale: locale }}
             />
           </div>
           <div className={styles.chartwrapper}>
@@ -723,6 +750,7 @@ export default function SolarGraphPage() {
               type={"bar"}
               className={styles.chartStyle}
               data={monthlyPeakData}
+              options={{ locale: locale }}
             />
           </div>
           <div className={styles.chartwrapper}>
@@ -731,6 +759,7 @@ export default function SolarGraphPage() {
               type={"bar"}
               className={styles.chartStyle}
               data={monthlyLivePeakData}
+              options={{ locale: locale }}
             />
           </div>
           <div className={styles.chartwrapper}>
@@ -739,6 +768,7 @@ export default function SolarGraphPage() {
               type={"bar"}
               className={styles.chartStyle}
               data={temperatureData}
+              options={{ locale: locale }}
             />
           </div>
 

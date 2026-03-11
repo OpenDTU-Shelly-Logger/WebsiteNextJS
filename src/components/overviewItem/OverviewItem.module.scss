@@ -1,0 +1,18 @@
+.overviewItem {
+  width: 80%;
+  max-width: 400px;
+  font-size: 20px;
+  display: flex;
+  justify-content: space-between;
+
+  @media (max-width: 500px) {
+    width: 100%;
+    max-width: 500px;
+  }
+
+  @media (max-width: 400px) {
+    font-size: 18px;
+    width: 100%;
+    max-width: 400px;
+  }
+}

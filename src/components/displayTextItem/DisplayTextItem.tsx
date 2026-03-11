@@ -1,3 +1,4 @@
+import { formatNumber } from "@/helper/formatHelper";
 import styles from "./DisplayTextItem.module.scss";
 
 type Props = {
@@ -15,7 +16,7 @@ export default function DisplayTextItem(props: Props) {
         <div className={styles.content}>
           {props.text !== undefined
             ? props.text
-            : `${props.content?.v.toFixed(2)} ${props.content?.u}`}
+            : formatNumber(props.content?.v, 2, props.content?.u)}
           {props.lines &&
             props.lines.map((line, idx) => (
               <div key={idx} className={styles.inlineLine}>

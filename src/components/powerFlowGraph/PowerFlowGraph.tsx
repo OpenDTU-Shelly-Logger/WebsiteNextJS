@@ -1,3 +1,4 @@
+import { formatNumber } from "@/helper/formatHelper";
 import { PowerData } from "@/types/Emeter";
 import { SolarData } from "@/types/OpenDTUData";
 import { useEffect, useState } from "react";
@@ -133,7 +134,7 @@ export default function PowerFlowGraph({ solarData, powerData }: Props) {
         fill="white"
         fontWeight={"500"}
       >
-        {(solarData?.total.Power.v.toFixed(2) ?? "") + solarData?.total.Power.u}
+        {formatNumber(solarData?.total.Power.v, 1, solarData?.total.Power.u)}
       </text>
       <text
         x="475"
@@ -143,14 +144,18 @@ export default function PowerFlowGraph({ solarData, powerData }: Props) {
         fontWeight="500"
         fontSize="26"
       >
-        {((powerData?.total_power ?? 0) <= 0
-          ? 0
-          : powerData?.total_power.toFixed(2)) + "W"}
+        {formatNumber(
+          (powerData?.total_power ?? 0) <= 0 ? 0 : powerData?.total_power,
+          1,
+          "W",
+        )}
       </text>
       <text x="245" y="340" fontSize="26" fill="white" fontWeight="500">
-        {(
-          (powerData?.total_power ?? 0) + (solarData?.total.Power.v ?? 0)
-        ).toFixed(2) + "W"}
+        {formatNumber(
+          (powerData?.total_power ?? 0) + (solarData?.total.Power.v ?? 0),
+          1,
+          "W",
+        )}
       </text>
 
       {!useGridPower && (
@@ -181,9 +186,13 @@ export default function PowerFlowGraph({ solarData, powerData }: Props) {
 
       {!useGridPower && (
         <text x="300" y="80" fontSize="24" textAnchor="middle" fill="white">
-          {((powerData?.total_power ?? 0 < 0)
-            ? -1 * (powerData?.total_power ?? 0)
-            : "0") + "W"}
+          {formatNumber(
+            (powerData?.total_power ?? 0 < 0)
+              ? -1 * (powerData?.total_power ?? 0)
+              : 0,
+            1,
+            "W",
+          )}
         </text>
       )}
       <path

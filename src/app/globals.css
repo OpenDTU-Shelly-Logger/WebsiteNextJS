@@ -2,8 +2,9 @@
   --background: #27272f;
   --foreground: #ffffff;
   --accent1: #0099ff;
-  --solar-cell-fill: #e7e710;
-  --solar-cell-text: #000000;
+  --solar-cell-fill: #ffc400ff;
+  --solar-cell-text: #ffffff;
+  --solar-cell-bg: #2b3047;
 }
 
 html,

@@ -1,9 +1,16 @@
 import React from "react";
 import styles from "./Compass.module.scss";
 
-const Compass: React.FC = () => {
+type Props = {
+  rotation?: number;
+};
+
+const Compass: React.FC<Props> = ({ rotation = 0 }) => {
   return (
-    <div className={styles.rotatedContainer}>
+    <div
+      className={styles.rotatedContainer}
+      style={{ transform: `rotate: ${rotation}deg` }}
+    >
       <div className={styles.container}>
         <div className={`${styles.label} ${styles.north}`}>N</div>
         <div className={`${styles.label} ${styles.south}`}>S</div>

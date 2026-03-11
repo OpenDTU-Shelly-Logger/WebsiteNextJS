@@ -18,7 +18,7 @@ export default function handler(
     path: "/api/socket",
     addTrailingSlash: false,
     cors: {
-      origin: "*", //todo change to domain
+      origin: process.env.CORS_SOCKET_ORIGIN ?? "*",
     },
   });
 

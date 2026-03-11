@@ -1,5 +1,6 @@
 import { SolarData } from "@/types/OpenDTUData";
 import styles from "./SolarSummaryDisplay.module.scss";
+import { DataTableRow } from "../dataTableRow/DataTableRow";
 
 export default function SolarSummaryDisplay(solarData: SolarData) {
   if (solarData == null) return <div>Got no Data</div>;
@@ -18,56 +19,36 @@ export default function SolarSummaryDisplay(solarData: SolarData) {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Leistung</td>
-            <td>{data.Power.v.toFixed(2)}</td>
-            <td>{data.Power.u ?? ""}</td>
-          </tr>
-          <tr>
-            <td>Spannung</td>
-            <td>{data.Voltage.v.toFixed(2) ?? ""}</td>
-            <td>{data.Voltage.u ?? ""}</td>
-          </tr>
-          <tr>
-            <td>Strom</td>
-            <td>{data.Current.v.toFixed(2) ?? ""}</td>
-            <td>{data.Current.u ?? ""}</td>
-          </tr>
-          <tr>
-            <td>DC-Leistung</td>
-            <td>{data.PowerDC?.v.toFixed(2)}</td>
-            <td>{data.PowerDC?.u}</td>
-          </tr>
-          <tr>
-            <td>Tagesertrag</td>
-            <td>{data.YieldDay.v.toFixed(2) ?? ""}</td>
-            <td>{data.YieldDay.u ?? ""}</td>
-          </tr>
-          <tr>
-            <td>Gesamtertrag</td>
-            <td>{data.YieldTotal.v.toFixed(2) ?? ""}</td>
-            <td>{data.YieldTotal.u ?? ""}</td>
-          </tr>
-          <tr>
-            <td>Frequenz</td>
-            <td>{data.Frequency.v.toFixed(2) ?? ""}</td>
-            <td>{data.Frequency.u ?? ""}</td>
-          </tr>
-          <tr>
-            <td>Leistungsfaktor</td>
-            <td>{data.PowerFactor.v.toFixed(2) ?? ""}</td>
-            <td>{data.PowerFactor.u ?? ""}</td>
-          </tr>
-          <tr>
-            <td>Blindleistung</td>
-            <td>{data.ReactivePower.v.toFixed(2) ?? ""}</td>
-            <td>{data.ReactivePower.u ?? ""}</td>
-          </tr>
-          <tr>
-            <td>Wirkungsgrad</td>
-            <td>{data.Efficiency.v.toFixed(2) ?? ""}</td>
-            <td>{data.Efficiency.u ?? ""}</td>
-          </tr>
+          {DataTableRow("Leistung", data.Power.v, 2, data.Power.u)}
+          {DataTableRow("Spannung", data.Voltage.v, 2, data.Voltage.u)}
+          {DataTableRow("Strom", data.Current.v, 2, data.Current.u)}
+          {DataTableRow("DC-Leistung", data.PowerDC?.v, 2, data.PowerDC?.u)}
+          {DataTableRow("Tagesertrag", data.YieldDay.v, 2, data.YieldDay.u)}
+          {DataTableRow(
+            "Gesamtertrag",
+            data.YieldTotal.v,
+            2,
+            data.YieldTotal.u,
+          )}
+          {DataTableRow("Frequenz", data.Frequency.v, 2, data.Frequency.u)}
+          {DataTableRow(
+            "Leistungsfaktor",
+            data.PowerFactor.v,
+            2,
+            data.PowerFactor.u,
+          )}
+          {DataTableRow(
+            "Blindleistung",
+            data.ReactivePower.v,
+            2,
+            data.ReactivePower.u,
+          )}
+          {DataTableRow(
+            "Wirkungsgrad",
+            data.Efficiency.v,
+            2,
+            data.Efficiency.u,
+          )}
         </tbody>
       </table>
     </div>

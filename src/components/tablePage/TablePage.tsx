@@ -3,6 +3,7 @@ import { useState } from "react";
 import styles from "./TablePage.module.scss";
 import { useSolar } from "@/contexts/PowerContext";
 import { dateItemToString } from "@/types/DateItem";
+import { formatNumber } from "../../helper/formatHelper";
 
 type SortField =
   | "Date"
@@ -94,10 +95,10 @@ export default function TablePage() {
           {sortedData.map((day, index) => (
             <tr key={index}>
               <td>{dateItemToString(day.date)}</td>
-              <td>{day.yieldTotal} KWh</td>
-              <td>{day.yieldDay} Wh</td>
-              <td>{day.highestWatt} W</td>
-              <td>{day.temperature} °C</td>
+              <td>{formatNumber(day.yieldTotal, 1, "KWh")}</td>
+              <td>{formatNumber(day.yieldDay, 0, "Wh")}</td>
+              <td>{formatNumber(day.highestWatt, 1, "W")}</td>
+              <td>{formatNumber(day.temperature, 0, "°C")}</td>
             </tr>
           ))}
         </tbody>
